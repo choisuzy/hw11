@@ -2,8 +2,8 @@
 #include<stdlib.h>
 
 #define MAX_VERTEX 10 /* 최대 Vertex의 수를 10으로 정의함 */
-#define FALSE 0
-#define TRUE 1
+#define FALSE 0 /* FALSE를 0으로 정의함 */
+#define TRUE 1 /* TRUE를 1로 정의함 */
 
 typedef struct graphnode {  /* struct graphnode에 타입이 다른 데이터들을 그룹화 */
 	int vertex;	/* vertex를 int형으로 선언, vertex는 정점임, 데이터 필드 */
@@ -12,8 +12,8 @@ typedef struct graphnode {  /* struct graphnode에 타입이 다른 데이터들
 
 typedef struct graphtype { /* struct graphtype에 타입이 다른 데이터들을 그룹화 */
 	int n;	/* n을 int형으로 선언, 그래프정점의 갯수 */
-	graphnode* adjpointer[MAX_VERTEX]; /* 인접하는 헤드포인터들의 배열 */
-    int visited[MAX_VERTEX];  /* 방문 플래그 표시를 위한 배열*/
+	graphnode* adjpointer[MAX_VERTEX]; /* 인접하는 헤드포인터들의 배열을 graphnode포인터로 선언 */
+    int visited[MAX_VERTEX];  /* 방문 플래그 표시를 위한 배열을 정수형으로 선언*/
 }graphtype; /* 구조체 호출용 이름 */
 
 typedef struct stacknode{ /* struct stacknode에 타입이 다른 데이터들을 그룹화 */
@@ -21,15 +21,15 @@ typedef struct stacknode{ /* struct stacknode에 타입이 다른 데이터들�
    struct stacknode* link; /* 구조체 stacknode포인터 link를 선언, 링크 필드 */
 } stacknode; /* 구조체 호출용 이름 */
 
-stacknode* top;
+stacknode* top; /* stacknode포인터 top 선언 */
 
-typedef struct queuenode{
-   int data;
-   struct queuenode* link;
+typedef struct queuenode{ /* struct queuenode에 타입이 다른 데이터들을 그룹화 */
+   int data; /* data를 int형으로 선언*/
+   struct queuenode* link; /* 구조체 queuenode포인터 link를 선언, 링크 필드 */
 } queuenode; /* 구조체 호출용 이름 */
 
-typedef struct queuetype {
-   struct queuenode* front,* rear;
+typedef struct queuetype { /* struct queuetype에 타입이 다른 데이터들을 그룹화 */
+   struct queuenode* front,* rear; /* struct queuenode포인터 front와 rear 선언 */
 } queuetype; /* 구조체 호출용 이름 */
 
 void InitializeGraph(graphtype* g); /* 그래프를 초기화하는 함수 선언 */
@@ -241,52 +241,52 @@ int isQueueEmpty(queuetype* q) { /* Queue가 비었는지 확인하는 함수 �
    else return 0; /* q의 front부분이 빈공간이 아니라면 0을 반환함 */
 }
 
-void enQueue(queuetype* q, int e) { /* Queue에 새로운 것을 입력하는 함수 정의 */
-   queuenode* newnode = (queuenode*)malloc(sizeof(queuenode));
-   newnode->data = e;
-   newnode->link = NULL;
+void enQueue(queuetype* q, int e) { /* Queue에 데어터를 넣는 함수 정의 */
+   queuenode* newnode = (queuenode*)malloc(sizeof(queuenode)); /* queuenode크기만큼을 동적할당한 queuenode포인터를 queuenode포인터 newnode에 넣음 */
+   newnode->data = e; /* newnode의 data에 e를 넣음 */
+   newnode->link = NULL; /* newnode의 link를 빈공간으로 만듦*/
 
-   if (q->front == NULL) {
-      q->front = newnode;
-      q->rear = newnode;
+   if (q->front == NULL) { /* q의 front부분이 빈공간이라면 */
+      q->front = newnode; /* q의 front부분에 newnode를 넣음 */
+      q->rear = newnode; /* q의 rear부분에 newnode를 넣음 */
    }
-   else {
-      q->rear->link = newnode;
-      q->rear = newnode;
-   }
-}
-
-int deQueue(queuetype* q) {
-   queuenode* a = q->front;
-   int e;
-   if (isQueueEmpty(q)) return 0;
-   else {
-       e = a->data;
-       q->front = q->front->link;
-       if (q->front == NULL)
-       q->rear = NULL;
-       free(a);
-
-    return e;
+   else { /* q의 front부분이 빈공간이 아니라면 */
+      q->rear->link = newnode; /* q의 rear의 link부분에 newnode를 넣음 */
+      q->rear = newnode; /* q의 rear부분에 newnode를 넣음 */
    }
 }
 
+int deQueue(queuetype* q) { /* Queue에 데이터를 빼는 함수 정의 */
+   queuenode* a = q->front; /* queuenode포인터 a에 q의 front부분을 넣음 */
+   int e; /* e를 정수형으로 선언 */
+   if (isQueueEmpty(q)) return 0; /* Queue가 비었는지 확인하는 함수를 실행해서 해당하면 0을 반환함 */
+   else { /* isQueueEmpty함수에 성립하지 않으면 */
+       e = a->data; /* e에 a의 data부분을 넣음 */
+       q->front = q->front->link; /* q의 front부분에 q의 front부분의 link를 넣음 */
+       if (q->front == NULL) /* q의 front부분이 빈공간이라면 */
+       q->rear = NULL; /* q의 rear부분을 빈공간으로 만듦 */
+       free(a); /* a를 free시킴 */
 
-void BreathFirstSearch(graphtype* g, int h){
-    graphnode* b;
-    queuetype* q;
-    q = initQueue();
-    g->visited[h] =  TRUE;
-    printf("%d ", h);
-    enQueue(q, h);
+    return e; /* e를 반환함 */
+   }
+}
+
+
+void BreathFirstSearch(graphtype* g, int h){  /* 넓이우선탐색을 하는 함수 정의 */
+    graphnode* b; /* graphnode포인터 b를 선언 */
+    queuetype* q; /* queuetype포인터 q를 선언 */
+    q = initQueue(); /* q에 initQueue함수를 넣음 */
+    g->visited[h] =  TRUE; /* g의 visited배열은 TRUE */
+    printf("%d ", h); /* 출력 */
+    enQueue(q, h); /* enQueue함수 실행 */
    
-    while(!isQueueEmpty(q)) {
-        h = deQueue(q);
-        for (b = g->adjpointer[h]; b; b = b->link){
-        if (!g->visited[b->vertex]){
-            g->visited[b->vertex] = TRUE;
-            printf("%d ", b->vertex);
-            enQueue(q, b->vertex);
+    while(!isQueueEmpty(q)) { /* isQueueEmpty함수가 아닌 동안 while문을 돎 */
+        h = deQueue(q); /* h에 deQueue함수를 넣음 */
+        for (b = g->adjpointer[h]; b; b = b->link){ /* b번동안 for문을 돎 */
+            if (!g->visited[b->vertex]){ /* g의 visited부분이 아니면 */
+                g->visited[b->vertex] = TRUE; /* g의 visited부분을 TRUE로 함 */
+                printf("%d ", b->vertex); /* 출력 */
+                enQueue(q, b->vertex); /* enQueue함수 실행 */
         }
       }
    }
@@ -305,12 +305,12 @@ void PrintGraph(graphtype* g){ /*인접리스트의 포인터배열의 첫번째
     }
 }
 
-void FreeGraph(graphtype* g){
-     if(g->adjpointer != NULL){
-      free(g->adjpointer);
+void FreeGraph(graphtype* g){ /* graph를 freet시키는 함수 정의 */
+     if(g->adjpointer != NULL){ /* g의 adjpointer가 빈공간이 아니라면 */
+      free(g->adjpointer); /* g의 adjpointer를 free시킴 */
    }
-   if(g->visited != NULL){
-      free(g->visited);
+   if(g->visited != NULL){ /* g의 visited가 빈공간이 아니라면 */
+      free(g->visited); /* g의 visited를 free시킴 */
    }
 
 }
