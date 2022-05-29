@@ -41,7 +41,7 @@ int pop(); /* 스택에 pop하는 함수 선언 */
 void DepthFirstSearch(graphtype* g, int h); /* 깊이우선탐색을 하는 함수 선언 */
 queuetype* initQueue(); /* queue를 초기화하는 함수 선언 */
 int isQueueEmpty(); /* 큐가 비었는지 확인하는 함수 선언 */
-void enQueue(queuetype* q, int e);  /* Queue에 데어터를 넣는 함수 선언 */
+void enQueue(queuetype* q, int e);  /* Queue에 데이터를 넣는 함수 선언 */
 int deQueue(queuetype* q); /* Queue에 데이터를 빼는 함수 선언 */
 void BreathFirstSearch(graphtype* g, int h); /* 넓이우선탐색을 하는 함수 선언 */
 void PrintGraph(graphtype* g); /*인접리스트의 포인터배열의 첫번째부터 인접한 정점들을 출력하는 함수 선언 */
@@ -51,7 +51,11 @@ int main(){
 
     printf("[----- [Choi Suzy]  [2021024135] -----]\n");
     
+    int num; /* num을 정수형으로 선언 */
+    int dv; /* dv를 정수형으로 선언 */
+    int bv; /* bv를 정수형으로 선언 */
     char command; /* command 선언 */
+
     graphtype* g = (graphtype*)malloc(sizeof(graphtype)); /* graphtype크기만큼을 동적할당한 graphtype포인터를 graphtype포인터 G에 넣음 */
 
     do{
@@ -127,6 +131,7 @@ void InitializeGraph(graphtype* g){ /* 그래프를 초기화하는 함수 정�
     g->n = 0; /* 그래프의 정점 수를 0으로 초기화시킴 */
     for(h =0; h<MAX_VERTEX; h++){ /* MAX_VERTEX번 for문 돎 */
         g->adjpointer[h] = NULL; /* 인접하는 그래프 배열을 빈공간으로 초기화시킴 */
+        g->visited[v] = FALSE; /* g의 visited부분을 FALSE로 함 */
     }
 }
 
@@ -170,6 +175,8 @@ void InsertEdge(graphtype* g, int t, int h){ /* 그래프에 간선을 삽입하
         p = c; /* p에 c를 넣음 */
         c = c->link; /* c에 c의 link를 넣음 */
     }
+    p->link = node; /* p의 link부분에 node를 넣음 */ /* 마지막노드까지 찾아봤을 때 찾지 못했으면 마지막에 삽입함 */
+    return; /* 반환함 */
 }
 
 int isEmpty() { /* 스택이 비었는지 확인하는 함수 정의 */
@@ -198,6 +205,7 @@ int pop() { /* 스택에 pop하는 함수 정의 */
 		e = temp->data; /* e에 temp의 data를 넣음 */
         top = temp->link; /* top에 temp의 link를 넣음 */
 		free(temp); /* temp를 free시킴 */
+
 		return e; /* e를 반환함 */
 	}
 }
@@ -223,6 +231,9 @@ void DepthFirstSearch(graphtype* g, int h){ /* 깊이우선탐색을 하는 함�
          else b = b->link; /* g의 visited부분이면 b에 b의 link부분을 넣음 */
       }
       h = pop(); /* h에 pop함수 넣음 */
+   }
+   for(int i = 0; i<MAX_VERTEX; i++){ /* MAX_VERTEX번 만큼 for문을 돎 */
+       g->visited[i]=FALSE; /* g의 visited배열을 FALSE로 함 */
    }
 }
 
@@ -258,7 +269,7 @@ void enQueue(queuetype* q, int e) { /* Queue에 데어터를 넣는 함수 정�
 int deQueue(queuetype* q) { /* Queue에 데이터를 빼는 함수 정의 */
    queuenode* a = q->front; /* queuenode포인터 a에 q의 front부분을 넣음 */
    int e; /* e를 정수형으로 선언 */
-   
+
    if (isQueueEmpty(q)) return 0; /* Queue가 비었는지 확인하는 함수를 실행해서 해당하면 0을 반환함 */
    else { /* isQueueEmpty함수에 성립하지 않으면 */
        e = a->data; /* e에 a의 data부분을 넣음 */
@@ -287,9 +298,12 @@ void BreathFirstSearch(graphtype* g, int h){  /* 넓이우선탐색을 하는 �
                 g->visited[b->vertex] = TRUE; /* g의 visited부분을 TRUE로 함 */
                 printf("%d ", b->vertex); /* 출력 */
                 enQueue(q, b->vertex); /* enQueue함수 실행 */
+            }
         }
-      }
-   }
+    }
+    for(int i = 0; i<MAX_VERTEX; i++){ /* MAX_VERTEX번만큼 for문을 돎 */
+        g->visited[i] = FALSE; /* g의 visited배열을 FALSE로 함 */
+    }
 }
 
 void PrintGraph(graphtype* g){ /*인접리스트의 포인터배열의 첫번째부터 인접한 정점들을 출력하는 함수 정의 */
