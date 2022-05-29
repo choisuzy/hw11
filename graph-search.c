@@ -132,7 +132,7 @@ void InitializeGraph(graphtype* g){ /* 그래프를 초기화하는 함수 정�
 
 void InsertVertex(graphtype* g, int h){ /* 그래프에 정점을 삽입하는 함수 정의 */
     if (g->n + 1 > MAX_VERTEX) { /* 그래프가 정점개수를 초과하였을 때 */
-		return; /* 0 반환함 */
+		return; /* 반환함 */
 	}
 	g->n++; /* 그래프 정점의 개수 하나 증가시킴 */
 }
@@ -140,16 +140,16 @@ void InsertVertex(graphtype* g, int h){ /* 그래프에 정점을 삽입하는 �
 void InsertEdge(graphtype* g, int t, int h){ /* 그래프에 간선을 삽입하는 함수 정의 */
     if(t >= g->n || h>= g->n){ /* 정점 t가 그래프 정점의 개수이상이거나 정점 h가 그래프 정점의 개수 이상일 때*/
         printf("error \n"); /* print */
-        return; /* 0을 반환함 */
+        return; /* 반환함 */
     }
 
-    graphnode* node = (graphnode*)malloc (sizeof(graphnode)); /* 삽입할 노드를 동적할당으로 생성함 */
+    graphnode* node = (graphnode*)malloc (sizeof(graphnode)); /* graphnode크기만큼을 동적할당한 graphnode포인터를 graphnode포인터 node에 넣음 */
     node -> vertex = h; /* node의 vertex부분에 h를 넣음 */
     node -> link = NULL; /* node의 link부분을 빈공간으로 만듦 */
 
     if(g -> adjpointer[h] == NULL){ /* g의 adjpointer가 빈공간이라면 */
         g -> adjpointer[h] = node; /* g의 adjpointer에 node를 넣음 */
-        return; /* 0을 반환함 */
+        return; /* 반환함 */
     }
 
     graphnode* c = g -> adjpointer[h]; /* graphnode포인터 c에 g의 adjpointer를 넣음 */
@@ -165,7 +165,7 @@ void InsertEdge(graphtype* g, int t, int h){ /* 그래프에 간선을 삽입하
             node->link = c; /* node의 link에 c를 넣음 */
             p->link = node; /* p의 link에 node를 넣음 */
             }
-        return; /* 0을 반환함 */
+        return; /* 반환함 */
         }
         p = c; /* p에 c를 넣음 */
         c = c->link; /* c에 c의 link를 넣음 */
@@ -230,8 +230,8 @@ queuetype* initQueue(){ /* queue를 초기화하는 함수 정의 */
    queuetype* q; /* queuetype 포인터 q선언 */
    q = (queuetype*)malloc(sizeof(queuetype)); /* queuetype크기만큼을 동적할당한 queuetype포인터를 queuetype포인터 q에 넣음 */
   
-   q->front = NULL; /* q의 front부분에 빈공간을 넣음 */
-   q->rear = NULL; /* q의 rear부분에 빈공간을 넣음 */
+   q->front = NULL; /* q의 front부분을 빈공간으로 만듦 */
+   q->rear = NULL; /* q의 rear부분을 빈공간으로 만듦 */
    return q; /* q를 초기화함 */
 }
 
@@ -258,6 +258,7 @@ void enQueue(queuetype* q, int e) { /* Queue에 데어터를 넣는 함수 정�
 int deQueue(queuetype* q) { /* Queue에 데이터를 빼는 함수 정의 */
    queuenode* a = q->front; /* queuenode포인터 a에 q의 front부분을 넣음 */
    int e; /* e를 정수형으로 선언 */
+   
    if (isQueueEmpty(q)) return 0; /* Queue가 비었는지 확인하는 함수를 실행해서 해당하면 0을 반환함 */
    else { /* isQueueEmpty함수에 성립하지 않으면 */
        e = a->data; /* e에 a의 data부분을 넣음 */
@@ -311,5 +312,4 @@ void FreeGraph(graphtype* g){ /* graph를 freet시키는 함수 정의 */
    if(g->visited != NULL){ /* g의 visited가 빈공간이 아니라면 */
       free(g->visited); /* g의 visited를 free시킴 */
    }
-
 }
