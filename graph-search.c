@@ -39,10 +39,10 @@ int isEmpty(); /* 스택이 비었는지 확인하는 함수 선언 */
 void push(int e); /* 스택에 push하는 함수 선언 */
 int pop(); /* 스택에 pop하는 함수 선언 */
 void DepthFirstSearch(graphtype* g, int h); /* 깊이우선탐색을 하는 함수 선언 */
-queuetype* initQueue();
-int isQueueEmpty();
-void enQueue(queuetype* q, int item);
-int deQueue(queuetype* q);
+queuetype* initQueue(); /* queue를 초기화하는 함수 선언 */
+int isQueueEmpty(); /* 큐가 비었는지 확인하는 함수 선언 */
+void enQueue(queuetype* q, int e);  /* Queue에 데어터를 넣는 함수 선언 */
+int deQueue(queuetype* q); /* Queue에 데이터를 빼는 함수 선언 */
 void BreathFirstSearch(graphtype* g, int h); /* 넓이우선탐색을 하는 함수 선언 */
 void PrintGraph(graphtype* g); /*인접리스트의 포인터배열의 첫번째부터 인접한 정점들을 출력하는 함수 선언 */
 void FreeGraph(graphtype* g); /* 그래프에 할당된 메모리를 free시키는 함수 선언 */
@@ -77,44 +77,43 @@ int main(){
             InsertVertex(g, data);
 			break; /* 조건식을 빠져나옴 */
 		case 'e': case 'E': /* command가 e나 E면 */
-            int num;
-            printf("input edge num : ");
-            scanf("%d", &num);
+            int num; /* num을 정수형으로 선언 */
+            printf("input edge num : "); /* 출력 */
+            scanf("%d", &num); /* 사용자에게 간선의 개수 num을 입력받음 */
 
-            if (num > MAX_VERTEX*(MAX_VERTEX-1)/2)  /* 간선의 개수가 최대간선수보다 큰 경우에는 break */
-            break;
+            if (num > MAX_VERTEX*(MAX_VERTEX-1)/2)  /* 간선의 개수가 최대간선수보다 큰 경우 */
+            break; /* 조건문을 빠져나옴 */
 
-            for (int i = 0; i < num; i++) { /*for문을 Num만큼 돌며 무방향 그래프의 간선을 해당 정점에 부속시킴*/
-                int x, y; // 꼬리정점 x, 머리정점 y
-                printf("input vertex(x,y) : ");
-                scanf("%d %d", &x, &y);
+            for (int i = 0; i < num; i++) { /* num만큼 for문을 돎 (방향이 없는 일반 그래프의 edge를 해당 vertex에 부속) */
+                int x, y; /* x와 y를 정수형으로 선언 */
+                printf("input vertex(x,y) : "); /* 출력 */
+                scanf("%d %d", &x, &y); /* 사용자에게 x와 y를 입력받음 */
 
-                // 무방향 그래프 간선 삽입
-                InsertEdge(g, x, y);
-                InsertEdge(g, y, x);
+                InsertEdge(g, x, y); /* InsertEdge함수 호출 */
+                InsertEdge(g, y, x); /* InsertEdge함수 호출 */
             }
 			break; /* 조건식을 빠져나옴 */
 		case 'd': case 'D': /* command가 d나 D이면 */
             int dv; // 탐색을 시작할 정점
-            printf("input vertex: ");
-            scanf("%d", &dv);
-			DepthFirstSearch(g, dv);
-            printf("\n");
+            printf("input vertex: "); /* 출력 */
+            scanf("%d", &dv); /* 사용자에게 vertex를 입력받음 */
+			DepthFirstSearch(g, dv); /* DepthFirstSearch함수 호출 */
+            printf("\n"); /* 출력 */
 			break; /* 조건식을 빠져나옴 */
 		case 'b': case 'B': /* command가 b나 B이면 */
             int bv; // 탐색을 시작할 정점
-            printf("input vertex: ");
-            scanf("%d", &bv);
-			BreathFirstSearch(g, bv);
+            printf("input vertex: "); /* 출력 */
+            scanf("%d", &bv); /* 사용자에게 vertex를 입력받음 */
+			BreathFirstSearch(g, bv); /* BreathFirstSearch함수 호출 */
 			break; /* 조건식을 빠져나옴 */
 		case 'p': case 'P': /* command가 p나 P이면 */
-			PrintGraph(g);
+			PrintGraph(g); /* PrintGraph함수 호출 */
 			break; /* 조건식을 빠져나옴 */
 		case 'q': case 'Q': /* command가 q나 Q이면 */
 			FreeGraph(g); /* FreeGraph함수 호출 */ 
 			break; /* 조건식을 빠져나옴 */
 		default: /* 위의 알파벳이 다 아니면 */
-			printf("\n       >>>>>   Concentration!!   <<<<<     \n"); /* print */
+			printf("\n       >>>>>   Concentration!!   <<<<<     \n"); /* 출력 */
 			break; /* 조건식을 빠져나옴 */
 		}
 
@@ -203,27 +202,27 @@ int pop() { /* 스택에 pop하는 함수 정의 */
 	}
 }
 
-void DepthFirstSearch(graphtype* g, int h){
-    graphnode* b;  
-    top = NULL;
-    push(h);
+void DepthFirstSearch(graphtype* g, int h){ /* 깊이우선탐색을 하는 함수 정의 */
+    graphnode* b;  /* graphnode포인터 b 선언 */
+    top = NULL; /* top을 빈공간으로 만듦 */
+    push(h); /* h를 push함 */
 
-    g->visited[h] = TRUE;
-    printf(" %d", h);
+    g->visited[h] = TRUE; /* g의 visited를 TRUE로 함 */
+    printf(" %d", h); /* 출력 */
 
-    while(!isEmpty()) {
-        b = g->adjpointer[h];
-        while(b) {
-        if (!g->visited[b->vertex]) {
-            push(b->vertex);
-            g->visited[b->vertex] = TRUE;
-            printf(" %d", b->vertex);
-            h = b->vertex;
-            b = g->adjpointer[h];
+    while(!isEmpty()) { /* isempty함수가 아니라면 */
+        b = g->adjpointer[h]; /* b에 g의 adjpointer배열을 넣음 */
+        while(b) { /* b이면 while문을 돎 */
+            if (!g->visited[b->vertex]) { /* g의 visited부분이 아니라면 */
+                push(b->vertex); /* b의 vertex부분을 push함 */
+                g->visited[b->vertex] = TRUE; /* g의 visited부분을 TRUE로 함 */
+                printf(" %d", b->vertex); /* 출력 */
+                h = b->vertex; /* h에 b의 vertex부분을 넣음 */
+                b = g->adjpointer[h]; /* b에 g의 adjpointer배열을 넣음 */
          }
-         else b = b->link;
+         else b = b->link; /* g의 visited부분이면 b에 b의 link부분을 넣음 */
       }
-      h = pop();
+      h = pop(); /* h에 pop함수 넣음 */
    }
 }
 
