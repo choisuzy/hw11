@@ -131,7 +131,7 @@ void InitializeGraph(graphtype* g){ /* 그래프를 초기화하는 함수 정�
     g->n = 0; /* 그래프의 정점 수를 0으로 초기화시킴 */
     for(h =0; h<MAX_VERTEX; h++){ /* MAX_VERTEX번 for문 돎 */
         g->adjpointer[h] = NULL; /* 인접하는 그래프 배열을 빈공간으로 초기화시킴 */
-        g->visited[v] = FALSE; /* g의 visited부분을 FALSE로 함 */
+        g->visited[h] = FALSE; /* g의 visited부분을 FALSE로 함 */
     }
 }
 
@@ -320,10 +320,15 @@ void PrintGraph(graphtype* g){ /*인접리스트의 포인터배열의 첫번째
 }
 
 void FreeGraph(graphtype* g){ /* graph를 freet시키는 함수 정의 */
-     if(g->adjpointer != NULL){ /* g의 adjpointer가 빈공간이 아니라면 */
-      free(g->adjpointer); /* g의 adjpointer를 free시킴 */
+   for (int i = 0; i < MAX_VERTEX; i++) { /* MAX_VERTEX번 도는 for문 *//* 인접리스트를 초기화하는 for문 */
+      graphnode* o = g->adjpointer[i];  /* grapenode포인터 p에 g의 adjpointer배열을 넣음 */
+      graphnode* p = NULL; /* grapenode포인터 p를 빈공간으로 만듦 */
+      
+      while(p != NULL) { /* p가 빈공간이 아니라면 */
+         p = o; /* p에 o를 넣음 */
+         o = o->link; /* o에 o의 link를 넣음 */
+         free(p); /* p를 free시킴 */
+      }
    }
-   if(g->visited != NULL){ /* g의 visited가 빈공간이 아니라면 */
-      free(g->visited); /* g의 visited를 free시킴 */
-   }
+   free(g); /* g를 free시킴 */
 }
